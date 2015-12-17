@@ -13,6 +13,10 @@ CRGB color;
 
 int step;
 
+byte chan;
+int dir;
+int chill;
+
 void setLED(CRGB color) {
   analogWrite(LED_R, color.red);
   analogWrite(LED_G, color.green);
@@ -26,17 +30,16 @@ void setup() {
   step = 0;
 }
 
-byte chan;
-int dir;
-
 void animationInit() {
   chan = random(3);
   dir  = color[chan] == 0 ? 1 : -1;
   step = color[chan];
+  chill = random(CHILL) + CHILL/4;
 }
 
 void animationStep() {
   color[chan] = step;
+  chill -= 1;
 }
 
 void animationNext() {
@@ -46,7 +49,7 @@ void animationNext() {
 
 void loop() {
   setLED(color);
-  if ( (step <= 0) || (step >= MAX) || (random(CHILL) == 0) )  { // Start of animation
+  if ( (step <= 0) || (step >= MAX) || (chill == 0) )  { // Start of animation
     animationInit();
   }
   animationNext();
