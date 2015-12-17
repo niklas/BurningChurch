@@ -4,10 +4,11 @@
 #define LED_R 6
 #define LED_G 5
 #define LED_B 3
-#define FPS 180
 
-#define MAX 60
-#define CHILL 200
+#define FPS 30
+#define MIN 2
+#define MAX 123
+#define CHILL 42
 
 CRGB color;
 
@@ -32,7 +33,7 @@ void setup() {
 
 void animationInit() {
   chan = random(3);
-  dir  = color[chan] == 0 ? 1 : -1;
+  dir  = color[chan] <= MIN ? 1 : -1;
   step = color[chan];
   chill = random(CHILL) + CHILL/4;
 }
@@ -49,7 +50,7 @@ void animationNext() {
 
 void loop() {
   setLED(color);
-  if ( (step <= 0) || (step >= MAX) || (chill == 0) )  { // Start of animation
+  if ( (step <= MIN) || (step >= MAX) || (chill == 0) )  { // Start of animation
     animationInit();
   }
   animationNext();
