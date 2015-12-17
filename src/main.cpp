@@ -1,23 +1,53 @@
 #include <Arduino.h>
+#include <FastLED.h>
 
-#define LED_R 3
+#define LED_R 6
 #define LED_G 5
-#define LED_B 6
+#define LED_B 3
+#define FPS 180
+
+#define MAX 120
+
+CRGB color;
+
+int step;
+
+void setLED(CRGB color) {
+  analogWrite(LED_R, color.red);
+  analogWrite(LED_G, color.green);
+  analogWrite(LED_B, color.blue);
+}
 
 void setup() {
-  analogWrite(LED_R, 0);
-  analogWrite(LED_G, 0);
-  analogWrite(LED_B, 0);
+  color = CRGB::Black;
+  setLED(color);
+
+  step = 0;
+}
+
+byte chan;
+int dir;
+
+void animationInit() {
+  chan = random(3);
+  dir  = color[chan] == 0 ? 1 : -1;
+  step = color[chan] == 0 ? 0 : MAX;
+}
+
+void animationStep() {
+  color[chan] = step;
+}
+
+void animationNext() {
+  step = step + dir;
+  delay(1000/FPS);
 }
 
 void loop() {
-  byte r,g,b;
-  r = random(255);
-  g = random(255);
-  b = random(255);
-  analogWrite(LED_R, r);
-  analogWrite(LED_G, g);
-  analogWrite(LED_B, b);
-
-  delay(1000);
+  setLED(color);
+  if ( (step <= 0) || (step >= MAX))  { // Start of animation
+    animationInit();
+  }
+  animationNext();
+  animationStep();
 }
