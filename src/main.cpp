@@ -5,12 +5,19 @@
 #define LED_G 5
 #define LED_B 3
 
+#define LED_TYPE LPD8806
+#define STRIP_COLOR_ORDER BRG
+#define STRIP_PIXEL_COUNT 12
+#define PIN_STRIP_DATA 10
+#define PIN_STRIP_CLK 9
+
 #define FPS 30
 #define MIN 2
-#define MAX 123
+#define MAX 253
 #define CHILL 42
 
 CRGB color;
+CRGB strip[STRIP_PIXEL_COUNT];
 
 int step;
 
@@ -28,6 +35,9 @@ void setup() {
   color = CRGB::Black;
   setLED(color);
 
+  FastLED.addLeds<LED_TYPE,PIN_STRIP_DATA,PIN_STRIP_CLK,STRIP_COLOR_ORDER>(strip, STRIP_PIXEL_COUNT).setCorrection(TypicalLEDStrip);
+  FastLED.setMaxRefreshRate(FPS);
+
   step = 0;
 }
 
@@ -41,6 +51,8 @@ void animationInit() {
 void animationStep() {
   color[chan] = step;
   chill -= 1;
+
+  strip[step % STRIP_PIXEL_COUNT] = color;
 }
 
 void animationNext() {
@@ -49,6 +61,7 @@ void animationNext() {
 }
 
 void loop() {
+  FastLED.show();
   setLED(color);
   if ( (step <= MIN) || (step >= MAX) || (chill == 0) )  { // Start of animation
     animationInit();
