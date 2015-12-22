@@ -12,7 +12,7 @@
 #define PIN_STRIP_DATA 10
 #define PIN_STRIP_CLK 9
 
-#define FPS 30
+#define FPS 60
 #define MIN 2
 #define MAX 253
 #define CHILL 42
@@ -44,7 +44,7 @@ void setup() {
   FastLED.setMaxRefreshRate(FPS);
 
   Fire__init(heat, STRIP_PIXEL_COUNT);
-  cooling = 35;
+  cooling = 25;
   sparking = 85;
   base = 4;
 
