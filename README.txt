@@ -37,3 +37,15 @@ B| = 5 black (GND)                                  |
  |                                                  |
  \--------------------------------------------------/
 
+Dirt Klinke
+-----------
+
+(bound cable/ground cable)
+
+ /-----------\
+ |           O
+ |       /---/
+ | 1 2 3 |
+       GND (fluff/black)
+     VCC (red/brown)
+   AO (white/white)
