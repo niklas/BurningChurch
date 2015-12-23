@@ -15,10 +15,10 @@ Pins
 | 13        | D10           | LED Strip DI (red)    |
 | 12        | D9            | LED Strip CI (green)  |
 | 27        | +5V           | LED Strip +5V (black) |
-| 27        | +5V           | Dirt (????)           |
+| 27        | +5V           | Dirt VCC (brown)      |
 | 29        | GND           | LED Strip GND (blue)  |
-| 29        | GND           | Dirt (????)           |
-| 20        | A6            | Dirt A                |
+| 29        | GND           | Dirt GND (black)      |
+| 20        | A6            | Dirt A0 (white)       |
 |           |               |                       |
 |           |               |                       |
 |           |               |                       |

@@ -11,11 +11,14 @@
 #define STRIP_PIXEL_COUNT 12
 #define PIN_STRIP_DATA 10
 #define PIN_STRIP_CLK 9
+#define PIN_DIRT 0
 
 #define FPS 60
 #define MIN 2
 #define MAX 253
 #define CHILL 42
+
+#define DEBUG
 
 CRGB color;
 CRGB strip[STRIP_PIXEL_COUNT];
@@ -37,6 +40,9 @@ void setLED(CRGB color) {
 }
 
 void setup() {
+#ifdef DEBUG
+  Serial.begin(9600);
+#endif
   color = CRGB::Black;
   setLED(color);
 
@@ -49,6 +55,8 @@ void setup() {
   base = 4;
 
   step = 0;
+
+  pinMode(PIN_DIRT, INPUT);
 }
 
 void animationInit() {
@@ -73,6 +81,14 @@ void animationNext() {
   delay(1000/FPS);
 }
 
+void readDirt() {
+  int dirt = analogRead(PIN_DIRT);
+#ifdef DEBUG
+  Serial.print("Dirt: ");
+  Serial.println(dirt);
+#endif
+}
+
 void loop() {
   FastLED.show();
   setLED(color);
@@ -81,4 +97,8 @@ void loop() {
   }
   animationNext();
   animationStep();
+
+  EVERY_N_SECONDS(1) {
+    readDirt();
+  }
 }
