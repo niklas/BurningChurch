@@ -26,6 +26,10 @@
 // How slow do the holy colors fade
 #define HOLY_LAZYNESS 23
 
+#define THUNDER_SPEED 130
+#define THUNDER_DARKNESS 190
+#define THUNDER_DURATION FPS * 5
+
 #define DEBUG
 
 CRGB strip[STRIP_PIXEL_COUNT];
@@ -65,23 +69,6 @@ uint16_t step;
 
 byte chan;
 uint8_t dryness;
-
-void setup() {
-#ifdef DEBUG
-  Serial.begin(9600);
-#endif
-  FastLED.addLeds<LED_TYPE,PIN_STRIP_DATA,PIN_STRIP_CLK,STRIP_COLOR_ORDER>(strip, STRIP_PIXEL_COUNT).setCorrection(TypicalLEDStrip);
-  FastLED.setMaxRefreshRate(FPS);
-
-  Fire__init(heat, HEAT_RESOLUTION);
-
-  step = 0;
-
-  pinMode(PIN_DIRT, INPUT);
-
-  // Start in the middle
-  dryness = 0x7F;
-}
 
 void animationStep() {
   int i;
@@ -142,6 +129,66 @@ void readDirt() {
   Serial.print(")");
   Serial.println();
 #endif
+}
+
+void intro() {
+  uint16_t i, p;
+  uint16_t val, lim;
+  byte on;
+  CRGB col;
+
+#ifdef DEBUG
+  Serial.println("Running Intro...");
+#endif
+
+  for (i=0; i<THUNDER_DURATION; i++) {
+    val = inoise8(THUNDER_SPEED * i * i);
+    lim = i;
+    on = val < lim ? 255 : 0;
+    col = CRGB(on, on, on);
+    for (p=0; p<STRIP_PIXEL_COUNT; p++) {
+      strip[p] = col;
+    }
+    FastLED.show();
+#ifdef DEBUG
+    Serial.print(i);
+    Serial.print(" -- ");
+    Serial.print(val);
+    Serial.print("/");
+    Serial.print(lim);
+    Serial.println();
+#endif
+    delay(1000/FPS);
+  }
+
+  Serial.println("Intro done. Fading out...");
+
+  for (i=0; i<180; i+=1) {
+    fadeToBlackBy(strip, STRIP_PIXEL_COUNT, 6);
+    FastLED.show();
+    delay(1000/FPS);
+  }
+
+  Serial.print("done.");
+}
+
+void setup() {
+#ifdef DEBUG
+  Serial.begin(9600);
+#endif
+  FastLED.addLeds<LED_TYPE,PIN_STRIP_DATA,PIN_STRIP_CLK,STRIP_COLOR_ORDER>(strip, STRIP_PIXEL_COUNT).setCorrection(TypicalLEDStrip);
+  FastLED.setMaxRefreshRate(FPS);
+
+  Fire__init(heat, HEAT_RESOLUTION);
+
+  step = 0;
+
+  pinMode(PIN_DIRT, INPUT);
+
+  // Start in the middle
+  dryness = 0x7F;
+
+  intro();
 }
 
 void loop() {
