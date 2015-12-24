@@ -23,13 +23,23 @@
 #define DRY_MIN 900
 #define DRY_STEP 16
 
+#define HOLY_LAZYNESS 42
+
 #define DEBUG
 
-CRGB color;
 CRGB strip[STRIP_PIXEL_COUNT];
 
-//CRGB holy_color = CRGB(118,195,223); // blueist
-CRGB holy_color = CRGB(33,187,26); // greenish
+CRGB blue = CRGB(118,195,223);
+CRGB green = CRGB(33,187,26);
+CRGB purple = CRGB(201,66,207);
+CRGB black  = CRGB::Black;
+
+CRGBPalette16 holyPalette = CRGBPalette16(
+    green  , green , green  , blue   ,
+    blue   , blue  , purple , purple ,
+    purple , green , blue   , purple ,
+    blue   , green , purple , purple
+);
 
 // Fire settings
 byte heat[HEAT_RESOLUTION];
@@ -38,7 +48,7 @@ byte cooling, sparking, base;
 // Holy settings
 // ...
 
-int step;
+uint16_t step;
 
 byte chan;
 uint8_t dryness;
@@ -47,8 +57,6 @@ void setup() {
 #ifdef DEBUG
   Serial.begin(9600);
 #endif
-  color = CRGB::Black;
-
   FastLED.addLeds<LED_TYPE,PIN_STRIP_DATA,PIN_STRIP_CLK,STRIP_COLOR_ORDER>(strip, STRIP_PIXEL_COUNT).setCorrection(TypicalLEDStrip);
   FastLED.setMaxRefreshRate(FPS);
 
@@ -92,13 +100,14 @@ void animationStep() {
     );
     strip[i] = blend(
         fire,
-        holy_color,
+        ColorFromPalette(holyPalette, step / HOLY_LAZYNESS, 255, LINEARBLEND),
         dryness
     );
   }
 }
 
 void animationNext() {
+  step++;
   delay(1000/FPS);
 }
 
