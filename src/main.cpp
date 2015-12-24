@@ -131,7 +131,9 @@ void animationStep() {
     );
     strip[i] = blend(
         fire,
-        ColorFromPalette(holyPalette, step / HOLY_LAZYNESS, 255, LINEARBLEND),
+        ColorFromPalette(holyPalette,
+          (8 * (i % 4)) + (step / HOLY_LAZYNESS),
+          255, LINEARBLEND),
         dryness
     );
   }
