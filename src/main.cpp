@@ -13,6 +13,8 @@
 #define PIN_STRIP_DATA 10
 #define PIN_STRIP_CLK 9
 #define PIN_DIRT 0
+// Max values
+#define FIRE_SPARKING 85
 
 #define FPS 60
 #define MIN 2
@@ -49,7 +51,7 @@ void setup() {
 
   Fire__init(heat, HEAT_RESOLUTION);
   cooling = 25;
-  sparking = 85;
+  sparking = FIRE_SPARKING;
   base = 4;
 
   step = 0;
@@ -64,7 +66,11 @@ void animationStep() {
   int i;
   CRGB fire;
   uint16_t h;
-  Fire__eachStep(heat, HEAT_RESOLUTION, cooling, sparking, base);
+  Fire__eachStep(heat, HEAT_RESOLUTION,
+      cooling,
+      FIRE_SPARKING - (FIRE_SPARKING * dryness / 255),
+      base
+  );
 
   for (i; i<STRIP_PIXEL_COUNT; i++) {
     h = i * HEAT_RESOLUTION_FACTOR;
