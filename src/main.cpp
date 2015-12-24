@@ -17,12 +17,11 @@
 #define FIRE_SPARKING 85
 
 #define FPS 60
-#define MIN 2
-#define MAX 253
-#define CHILL 42
 #define DRY_MIN 900
-#define DRY_STEP 7
+// How fast to react to new values 1..64
+#define DRY_ADAPTIVNESS 7
 
+// How slow do the holy colors fade
 #define HOLY_LAZYNESS 42
 
 #define DEBUG
@@ -114,9 +113,9 @@ void animationNext() {
 void readDirt() {
   int val = analogRead(PIN_DIRT);
   if (val > DRY_MIN) {
-    dryness = qadd8(dryness, DRY_STEP);
+    dryness = qadd8(dryness, DRY_ADAPTIVNESS);
   } else {
-    dryness = qsub8(dryness, DRY_STEP);
+    dryness = qsub8(dryness, DRY_ADAPTIVNESS);
   }
 #ifdef DEBUG
   Serial.print("Raw Dryness: ");
