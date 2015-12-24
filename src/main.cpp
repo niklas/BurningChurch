@@ -76,10 +76,7 @@ void readDirt() {
   int val = analogRead(PIN_DIRT);
   if (val > DRY_MIN) {
     dryness = qadd8(dryness, DRY_STEP);
-#ifdef DEBUG
-    Serial.println("DRY!!");
-#endif
-  } {
+  } else {
     dryness = qsub8(dryness, DRY_STEP);
   }
 #ifdef DEBUG
