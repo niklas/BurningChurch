@@ -150,14 +150,6 @@ void intro() {
       strip[p] = col;
     }
     FastLED.show();
-#ifdef DEBUG
-    Serial.print(i);
-    Serial.print(" -- ");
-    Serial.print(val);
-    Serial.print("/");
-    Serial.print(lim);
-    Serial.println();
-#endif
     delay(1000/FPS);
   }
 
