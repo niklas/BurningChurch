@@ -28,6 +28,9 @@
 CRGB color;
 CRGB strip[STRIP_PIXEL_COUNT];
 
+//CRGB holy_color = CRGB(118,195,223); // blueist
+CRGB holy_color = CRGB(33,187,26); // greenish
+
 // Fire settings
 byte heat[HEAT_RESOLUTION];
 byte cooling, sparking, base;
@@ -89,7 +92,7 @@ void animationStep() {
     );
     strip[i] = blend(
         fire,
-        CRGB(118,195,223),
+        holy_color,
         dryness
     );
   }
