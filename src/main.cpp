@@ -51,8 +51,8 @@ void setup() {
 
   pinMode(PIN_DIRT, INPUT);
 
-  // Start holy
-  dryness = 0xFF;
+  // Start in the middle
+  dryness = 0x7F;
 }
 
 void animationStep() {
