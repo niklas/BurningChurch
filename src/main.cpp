@@ -191,4 +191,8 @@ void loop() {
   EVERY_N_MILLIS(222) {
     readDirt();
   }
+
+  if (step<1024) {
+    fadeToBlackBy(strip, STRIP_PIXEL_COUNT, 255-(step/4));
+  }
 }
