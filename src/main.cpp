@@ -22,7 +22,7 @@
 #define DRY_ADAPTIVNESS 7
 
 // How slow do the holy colors fade
-#define HOLY_LAZYNESS 1
+#define HOLY_LAZYNESS 23
 
 #define DEBUG
 
