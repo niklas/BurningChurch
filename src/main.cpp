@@ -13,8 +13,10 @@
 #define PIN_STRIP_DATA 10
 #define PIN_STRIP_CLK 9
 #define PIN_DIRT 0
-// Max values
+// Max value
 #define FIRE_SPARKING 85
+#define FIRE_COOLING 55
+#define FIRE_BASE 4
 
 #define FPS 60
 #define DRY_MIN 900
@@ -55,7 +57,6 @@ CRGBPalette16 holyPalette = CRGBPalette16(
 
 // Fire settings
 byte heat[HEAT_RESOLUTION];
-byte cooling, sparking, base;
 
 // Holy settings
 // ...
@@ -73,9 +74,6 @@ void setup() {
   FastLED.setMaxRefreshRate(FPS);
 
   Fire__init(heat, HEAT_RESOLUTION);
-  cooling = 25;
-  sparking = FIRE_SPARKING;
-  base = 4;
 
   step = 0;
 
@@ -89,10 +87,12 @@ void animationStep() {
   int i;
   CRGB fire;
   uint16_t h;
+
+  // Fire burns (more) when it's wet
   Fire__eachStep(heat, HEAT_RESOLUTION,
-      cooling,
+      FIRE_COOLING,
       FIRE_SPARKING - (FIRE_SPARKING * dryness / 255),
-      base
+      FIRE_BASE
   );
 
   for (i; i<STRIP_PIXEL_COUNT; i++) {
