@@ -5,6 +5,11 @@
 #define LED_TYPE LPD8806
 #define STRIP_COLOR_ORDER BRG
 #define STRIP_PIXEL_COUNT 12
+
+// Fire Interpolation (MUST ADAPT BLEND ALGORYTHM WHEN CHANGING)
+#define HEAT_RESOLUTION_FACTOR 3
+#define HEAT_RESOLUTION STRIP_PIXEL_COUNT * HEAT_RESOLUTION_FACTOR
+#define HEAT_FOCUS 200
 #define PIN_STRIP_DATA 10
 #define PIN_STRIP_CLK 9
 #define PIN_DIRT 0
@@ -14,7 +19,7 @@
 #define MAX 253
 #define CHILL 42
 #define DRY_MIN 900
-#define DRY_STEP 5
+#define DRY_STEP 16
 
 #define DEBUG
 
@@ -22,7 +27,7 @@ CRGB color;
 CRGB strip[STRIP_PIXEL_COUNT];
 
 // Fire settings
-byte heat[STRIP_PIXEL_COUNT];
+byte heat[HEAT_RESOLUTION];
 byte cooling, sparking, base;
 
 // Holy settings
@@ -42,7 +47,7 @@ void setup() {
   FastLED.addLeds<LED_TYPE,PIN_STRIP_DATA,PIN_STRIP_CLK,STRIP_COLOR_ORDER>(strip, STRIP_PIXEL_COUNT).setCorrection(TypicalLEDStrip);
   FastLED.setMaxRefreshRate(FPS);
 
-  Fire__init(heat, STRIP_PIXEL_COUNT);
+  Fire__init(heat, HEAT_RESOLUTION);
   cooling = 25;
   sparking = 85;
   base = 4;
@@ -57,11 +62,27 @@ void setup() {
 
 void animationStep() {
   int i;
-  Fire__eachStep(heat, STRIP_PIXEL_COUNT, cooling, sparking, base);
+  CRGB fire;
+  uint16_t h;
+  Fire__eachStep(heat, HEAT_RESOLUTION, cooling, sparking, base);
 
   for (i; i<STRIP_PIXEL_COUNT; i++) {
+    h = i * HEAT_RESOLUTION_FACTOR;
+    fire = blend(
+        blend(
+          HeatColor(heat[h  ]),
+          HeatColor(heat[h+1]),
+          HEAT_FOCUS
+        ),
+        blend(
+          HeatColor(heat[h+2]),
+          HeatColor(heat[h+3]),
+          qsub8(255, HEAT_FOCUS)
+        ),
+        128
+    );
     strip[i] = blend(
-        HeatColor(heat[i]),
+        fire,
         CRGB(118,195,223),
         dryness
     );
