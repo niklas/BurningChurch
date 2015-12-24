@@ -32,12 +32,13 @@ CRGB blue = CRGB(118,195,223);
 CRGB green = CRGB(33,187,26);
 CRGB purple = CRGB(201,66,207);
 CRGB black  = CRGB::Black;
+CRGB white  = CRGB::White;
 
 CRGBPalette16 holyPalette = CRGBPalette16(
     green  , green , green  , blue   ,
     blue   , blue  , purple , purple ,
     purple , green , blue   , purple ,
-    blue   , green , purple , purple
+    blue   , green , purple , white
 );
 
 // Fire settings
