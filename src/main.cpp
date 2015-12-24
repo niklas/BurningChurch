@@ -34,12 +34,43 @@ CRGB purple = CRGB(201,66,207);
 CRGB black  = CRGB::Black;
 CRGB white  = CRGB::White;
 
+//CRGBPalette16 holyPalette = CRGBPalette16(
+//    green,
+//    blue,
+//    purple,
+//    green,
+//    green,
+//    green,
+//    blue,
+//    blue,
+//    blue,
+//    purple,
+//    purple,
+//    purple,
+//    green,
+//    blue,
+//    purple,
+//    white
+//    );
+
 CRGBPalette16 holyPalette = CRGBPalette16(
-    green  , green , green  , blue   ,
-    blue   , blue  , purple , purple ,
-    purple , green , blue   , purple ,
-    blue   , green , purple , white
-);
+    white,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black,
+    black
+    );
 
 // Fire settings
 byte heat[HEAT_RESOLUTION];
