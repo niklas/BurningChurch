@@ -161,7 +161,15 @@ void intro() {
     delay(1000/FPS);
   }
 
-  Serial.println("Intro done.");
+  Serial.println("Intro done. Fading out...");
+
+  for (i=0; i<180; i+=1) {
+    fadeToBlackBy(strip, STRIP_PIXEL_COUNT, 6);
+    FastLED.show();
+    delay(1000/FPS);
+  }
+
+  Serial.print("done.");
 }
 
 void setup() {
