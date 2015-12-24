@@ -17,8 +17,8 @@
 #define MIN 2
 #define MAX 253
 #define CHILL 42
-#define DRY_MIN 1000
-#define DRY_DELAY 5
+#define DRY_MIN 900
+#define DRY_STEP 5
 
 #define DEBUG
 
@@ -29,13 +29,15 @@ CRGB strip[STRIP_PIXEL_COUNT];
 byte heat[STRIP_PIXEL_COUNT];
 byte cooling, sparking, base;
 
+// Holy settings
+// ...
+
 int step;
 
 byte chan;
 int dir;
 int chill;
-int dryness;
-signed int dryness_since;
+uint8_t dryness;
 
 void setLED(CRGB color) {
   analogWrite(LED_R, color.red);
@@ -61,6 +63,9 @@ void setup() {
   step = 0;
 
   pinMode(PIN_DIRT, INPUT);
+
+  // Start holy
+  dryness = 0xFF;
 }
 
 void animationInit() {
@@ -75,15 +80,14 @@ void animationStep() {
   color[chan] = step;
   chill -= 1;
 
-  if (dryness_since > DRY_DELAY) { // Too Dry
-    for (i; i<STRIP_PIXEL_COUNT; i++) {
-      strip[i] = CRGB(118,195,223);
-    }
-  } else {
-    Fire__eachStep(heat, STRIP_PIXEL_COUNT, cooling, sparking, base);
-    for (i; i<STRIP_PIXEL_COUNT; i++) {
-      strip[i] = HeatColor(heat[i]);
-    }
+  Fire__eachStep(heat, STRIP_PIXEL_COUNT, cooling, sparking, base);
+
+  for (i; i<STRIP_PIXEL_COUNT; i++) {
+    strip[i] = blend(
+        HeatColor(heat[i]),
+        CRGB(118,195,223),
+        dryness
+    );
   }
 }
 
@@ -93,18 +97,24 @@ void animationNext() {
 }
 
 void readDirt() {
-  dryness = analogRead(PIN_DIRT);
-  if (dryness > DRY_MIN) {
-    dryness_since++;
-  } else {
-    dryness_since = 0;
+  int val = analogRead(PIN_DIRT);
+  if (val > DRY_MIN) {
+    dryness = qadd8(dryness, DRY_STEP);
+#ifdef DEBUG
+    Serial.println("DRY!!");
+#endif
+  } {
+    dryness = qsub8(dryness, DRY_STEP);
   }
 #ifdef DEBUG
-  Serial.print("Dryness: ");
-  Serial.print( ( (float) dryness) / 10.23);
-  Serial.print("% Since: ");
-  Serial.print(dryness_since);
-  Serial.println(" checks");
+  Serial.print("Raw Dryness: ");
+  Serial.print( val / 10.23);
+  Serial.print("% Dryness: ");
+  Serial.print( dryness / 2.55);
+  Serial.print("% (");
+  Serial.print(dryness);
+  Serial.print(")");
+  Serial.println();
 #endif
 }
 
